@@ -3,8 +3,23 @@
 #include <map>
 #include <vector>
 
-#include "sudoku.h"
 using namespace std;
+
+const int kMaxNodes = 1 + 81*4 + 9*9*9*4;
+const int kMaxColumns = 400;
+const int kRow = 100, kCol = 200, kBox = 300, N = 81;
+void trans(const char in[N], int* target);
+bool solve_sudoku_dancing_links(int*);
+bool solved();
+
+
+void trans(const char in[N], int* target)
+{
+    for(int i = 0; i < N; ++i)
+    {
+        target[i] = in[i] - 48;
+    }
+}
 
 struct Node;
 typedef Node Column;
@@ -19,9 +34,6 @@ struct Node
     int size;
 };
 
-const int kMaxNodes = 1 + 81*4 + 9*9*9*4;
-const int kMaxColumns = 400;
-const int kRow = 100, kCol = 200, kBox = 300;
 
 
 struct Dance
@@ -252,7 +264,7 @@ struct Dance
     }
 };
 
-bool solve_sudoku_dancing_links(int unused)
+bool solve_sudoku_dancing_links(int* board)
 {
   Dance d(board);
   return d.solve();
