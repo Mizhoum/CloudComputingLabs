@@ -10,12 +10,14 @@
 #include "sudoku.h"
 
 using namespace std;
-const int lim_puzzle = 1024;
+const int lim_puzzle = 2000000;
 int thread_num = 0;
 
-int **buf;
-int **buf1;
-bool *is_solved;
+int **buf= new int* [lim_puzzle];
+int **buf1= new int* [lim_puzzle];
+bool *is_solved= new bool [lim_puzzle];
+char puzzle[2000000];
+int line[2000000]; 
 
 int64_t now()
 {
@@ -36,12 +38,12 @@ int main(int argc, char* argv[])
 {
     FILE *fp;
     FILE *fp1;
-    char puzzle[128];
+//    char puzzle[128000];
     int total_solved = 0;
     int total = 0;
-    buf = new int* [lim_puzzle];
-    buf1 = new int* [lim_puzzle];
-    is_solved = new bool [lim_puzzle];
+//    buf = new int* [lim_puzzle];
+//    buf1 = new int* [lim_puzzle];
+//    is_solved = new bool [lim_puzzle];
     for(int i = 0; i < lim_puzzle; ++i) buf[i] = new int [N];
     for(int i = 0; i < lim_puzzle; ++i) buf1[i] = new int [N];
     int end_of_file = 0;
@@ -52,7 +54,7 @@ int main(int argc, char* argv[])
     int K=0;
     int T=0;
     char ch;
-    int line[1024]; 
+//    int line[1024]; 
     line[0]=0;
     
     int kkk=0;
