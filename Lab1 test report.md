@@ -49,15 +49,15 @@
 
 - **林子翔**
 
-  
+  Linux内核版本为4.15.0-91-generic；2GB内存；20GB硬盘；供应商ID为GenuineIntel；CPU型号为Intel(R) Core(TM) i5-9400F CPU @ 2.90GHz，共1个物理CPU；每个物理CPU有1个物理核心，共有1个物理核心；使用超线程技术，1个物理核心模拟出1个逻辑核心，共有1个逻辑核心。
 
 - **胡卓韬**
 
-  
+  Linux内核版本为5.3.0-42-generic；2GB内存；供应商ID为GenuineIntel；CPU型号为Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz，共1个物理CPU；每个物理CPU有1个物理核心，共有1个物理核心；使用超线程技术，1个物理核心模拟出1个逻辑核心，共有1个逻辑核心。
 
 - **邓彬**
 
-  
+  linux内核版本为4.4.0-18362-Microsoft；供应商ID为Samsung ；CPU型号为 Intel(R) Core(TM) i5-7300HQ CPU @2.50Ghz，共有 1个物理CPU；每个物理CPU共有4个物理核心，共有4个物理核心；使用超线程技术，一个物理核心模拟出1个逻辑核心，共有4个逻辑核心。
 
 ### 1.6 代码实现版本
 
