@@ -97,7 +97,7 @@
 
 由于测试的硬件CPU物理核心数只有1个，所以从sudoku_solve线程数为1开始，总线程数开始超过CPU物理核心数，线程开始被操作系统调度，调度会有一定的开销，所以性能会有所下降。
 
-<img src="1.png" alt="1" style="zoom: 50%;" />
+[图1](https://github.com/Mizhoum/CloudComputingLabs/blob/master/1.png)
 
 ### 2.2 不同代码实现性能比较
 
@@ -107,7 +107,7 @@
 
 本测试将使用2份不同的代码进行性能比较：Code1和Code2。运行7个不同大小的文件，每个文件分别有数独题：1、10、20、40、60、80、100个。分别用Code1和Code2对这些文件进行求解（此处Code1和Code2都是使用单个数独求解线程进行求解），并测量时间开销。
 
-![2](2.png)
+[图2](https://github.com/Mizhoum/CloudComputingLabs/blob/master/2.png)
 
 上图显示数独题量从1 增长到100时，Code1与Code2之间的时间开销差距逐渐拉大。由于Code1在测试时的表现效果太差，仅仅是数独题量为100的时候，时间开销也高达3分钟，因此本次测试数独题量才全部定在100以下。从图中我们可以看到，随着数独题量的成倍增长，Code1与Code2的时间开销基本也在成倍增长。
 
@@ -117,7 +117,7 @@
 
 实验将使用Code2分别在ENV1-ENV4中对大小为84.0MB、具有1024 K个数独题的文件进行求解，其中sudoku_solve线程数从1开始逐步增加，测量时间开销。
 
-![3](3.png)
+[图3](https://github.com/Mizhoum/CloudComputingLabs/blob/master/3.png)
 
 上图为Code2在不同的硬件环境ENV1-ENV4中分别调整不同的sudoku_solve线程数的测试结果。可以看出，由于硬件环境ENV1-ENV4全部为单核CPU，所以主频 (CPU内核工作的时钟频率) 越高，运行速度越快。当线程数超过物理核心数 (或者逻辑核心) 1时，其性能会因为线程的调度而出现下降的趋势。
 
