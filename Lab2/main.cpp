@@ -61,6 +61,8 @@ int main(int argc, char *argv[])
 	
 	//创建线程池
 	pthread_pool = new pthread_t[pthread_num];
+if(!pthread_pool)
+		throw std::exception();
 	for(int i=0;i<pthread_num;i++)
 	{
 		if(pthread_create(pthread_pool+i, NULL, start, NULL) != 0);

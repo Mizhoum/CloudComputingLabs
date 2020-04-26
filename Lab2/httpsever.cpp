@@ -2,42 +2,28 @@
 #include <cstring>
 #include <linux/tcp.h>
 
-void httpsever::output(string finalentity)
-{
-	char outstring1[1024];
-		sprintf(outstring1,"%s",finalentity.c_str());
-		write(sockfd,outstring1,strlen(outstring1));
-}
-
-	string httpstring="<em>HTTP Web Server</em>\n</body></html>\n";
 void httpsever::Bad_Request(string method,string url){
-	string string1,string2;
-	string string501="<htmL><title>501 Not Implemented</title>c<body bgcolor=ffffff>\n Not Implemented\n<p>Does not implement this method:";
-	string GET404="<html><title>404 Not Found</title><body bgcolor=ffffff>\nNot Found\n<p>Could not find this file: ";
-	string tmp501="Http/1.1 501 Not Implemented\r\nContent-Type: text/html\r\nContent-Length:";
-	string tmp404="Http/1.1 404 Not Found\r\nContent-Type: text/html\r\nContent-Length:";
-	string POST404="<html><title>404 Not Found</title><body bgcolor=ffffff>\nNot Found\n<hr><em>HTTP Web Sever</em>\n</body></html>\n";
-	string POSTtmp404="Http/1.1 404 Not Found\r\nContent-Type: text/html\r\nContent-Length:";
+	string string1;
 	if(method!="GET"&&method!="POST"){
-	//	string string1="<htmL><title>501 Not Implemented</title>c<body bgcolor=ffffff>\n Not Implemented\n<p>Does not implement this method: "+method+"\n,<r><em>HTTP Web Server </em>\n</body></html>\n";
-			string string1=string501+method+"\n,<r>"+httpstring;
-		string tmp=tmp501+to_string(string1.length())+"\r\n\r\n";
+		string string1="<htmL><title>501 Not Implemented</title>c<body bgcolor=ffffff>\n Not Implemented\n<p>Does not implement this method: "+method+"\n,<r><em>HTTP Web Server </em>\n</body></html>\n";
+		string tmp="Http/1.1 501 Not Implemented\r\nContent-Type: text/html\r\nContent-Length:"+to_string(string1.length())+"\r\n\r\n";
 		string finalentity=tmp+string1;
-		output(finalentity); 
+		char outstring[1024];
+		sprintf(outstring,"%s",finalentity.c_str());//输出到命令行
+		write(sockfd,outstring,strlen(outstring));//sockfd是描述符,类似于open函数
 	}
 	else{
 		if(method=="GET"){
-			string string2=GET404+url+"</p>\n"+httpstring;
-		string tmp=tmp404+to_string(string2.length())+"\r\n\r\n";
-		string finalentity=tmp+string2;	
-		output(finalentity);
+			 string1="<html><title>404 Not Found</title><body bgcolor=ffffff>\nNot Found\n<p>Could not find this file: "+url+"</p>\n<hr><em>HTTP Web Sever</em>\n</body></html>\n";
 		}
 		if(method=="POST"){
-			string string2=POST404;
-		string tmp=POSTtmp404+to_string(string2.length())+"\r\n\r\n";
-		string finalentity=tmp+string2;	
-		output(finalentity);
+			 string1="<html><title>404 Not Found</title><body bgcolor=ffffff>\nNot Found\n<hr><em>HTTP Web Sever</em>\n</body></html>\n";
 		}
+		string tmp="Http/1.1 404 Not Found\r\nContent-Type: text/html\r\nContent-Length:"+to_string(string1.length())+"\r\n\r\n";
+		string finalentity=tmp+string1;	
+		char outstring[1024];
+		sprintf(outstring,"%s",finalentity.c_str());//输出到命令行
+		write(sockfd,outstring,strlen(outstring));//sockfd是描述符,类似于open函数
 	}	
 }
 
@@ -156,26 +142,29 @@ void httpsever::get_method(string method,string url){
 	else tmp+=url;
 	//cout<<tmp<<endl;
 	int fd=open(tmp.c_str(),O_RDONLY);//若所有欲核查的权限都通过了检查则返回0值，表示成功，只要有一个权限被禁止则返回-1。
-	if(fd<0){
-	Bad_Request(method,url);		
-	}
-	else{
+	if(fd>=0){
 	struct stat stat_buf;
    	fstat(fd,&stat_buf);//通过文件名filename获取文件信息，并保存在buf所指的结构体stat中
 	char outstring[1024];
 	sprintf(outstring,"Http/1.1 200 OK\r\nContent-Length:%d\r\nContent-Type: text/html\r\n\r\n",stat_buf.st_size);//输出到命令行
 	write(sockfd,outstring,strlen(outstring));//sockfd是描述符,类似于open函数
-	sendfile(sockfd,fd,0,stat_buf.st_size);	 	
+	sendfile(sockfd,fd,0,stat_buf.st_size);	 		
+	}
+	else{
+Bad_Request(method,url);
+		
 	}
 }
 
 void httpsever::post(string name,string id){
     string en="<html><title>POST Method</title><body bgcolor=ffffff>\n";
-    string en1="Your name: "+name+"\nYour id: "+id+"\n"+"<hr>"+httpstring;
+    string en1="Your name: "+name+"\nYour id: "+id+"\n"+"<hr><em>HTTP Web Server</em>\n</body></html>\n";
     en+=en1;
     string tmp="HTTP/1.1 200 OK\r\nContent-Type: text/html\r\nContent-Length: "+to_string(en.length())+"\r\n\r\n";
     string finalentity=tmp+en;
-   	output(finalentity);
+    char outstring[1024];
+    sprintf(outstring,"%s",finalentity.c_str());
+    write(sockfd, outstring, strlen(outstring));
 }
 
 
