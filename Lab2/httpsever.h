@@ -28,6 +28,7 @@ class  httpsever{
         ~httpsever(){}
         void solve();
         void Bad_Request(string method,string url);
+        void output(string finalentity);
         void get_method(string method,string url);
         void post(string name,string id);
 };
