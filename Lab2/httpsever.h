@@ -1,7 +1,8 @@
 #ifndef _HTTPSERVER_H_
 #define _HTTPSERVER_H_
+
 #include <iostream>
-#include<cstring>
+#include <cstring>
 #include <stdio.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -17,20 +18,19 @@
 #include <sys/wait.h>
 using namespace std;
 
-
 #define BUFFER_SIZE 10000
+
 class  httpsever{
-    private:
-        int sockfd; //套接字描述符
-    public:
-        httpsever(){}
-        httpsever(int id):sockfd(id){}
-        ~httpsever(){}
-        void solve();
-        void Bad_Request(string method,string url);
-        void get_method(string method,string url);
-        void post(string name,string id);
+private:
+    int sockfd; //套接字描述符
+public:
+    httpsever(){}
+    httpsever(int id):sockfd(id){}
+    ~httpsever(){}
+    void solve();
+    void Bad_Request(string method,string url);
+    void get_method(string method,string url);
+    void post(string name,string id);
 };
 
 #endif
-

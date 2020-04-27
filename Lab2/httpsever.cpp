@@ -2,6 +2,7 @@
 #include <cstring>
 #include <linux/tcp.h>
 
+//判断请求类型
 void httpsever::Bad_Request(string method,string url){
 	string string1;
 	if(method!="GET"&&method!="POST"){
@@ -27,6 +28,7 @@ void httpsever::Bad_Request(string method,string url){
 	}	
 }
 
+//根据请求类型具体处理
 void httpsever::solve(){
     string zone_s;
     bool status;
@@ -51,7 +53,7 @@ void httpsever::solve(){
                     request=zone_s.substr(0,request_end_pos);
                    
                     int head_end_pos=request.find("Content-Length");
-		    int entity_pos=request.length();//实体主体起始位置
+		            int entity_pos=request.length();//实体主体起始位置
                     if(head_end_pos!=-1){//存在请求体
                         string num;
                         head_end_pos+=15;
@@ -91,8 +93,7 @@ void httpsever::solve(){
                     if(method=="GET"){
                         get_method(method,url);
                     }
-                    else if(method=="POST"){
-                        
+                    else if(method=="POST"){   
                         if(url!="/Post_show"){
                             Bad_Request(method,url);
                             continue;
@@ -108,28 +109,26 @@ void httpsever::solve(){
                        /* if(entity.find("=",idpos+4)!=string::npos){
                             Bad_Request(method,url);
                             continue;
-                        }*/
-                        
+                        }*/                       
                         string name,id;                        
                         name=entity.substr(namepos+5,idpos-namepos-5);
                         id=entity.substr(idpos+4);
                         post(name,id);
-                    }
-                   
+                    }    
                 }
             }
           
         }
         else{
-            if(rc<=0){//检测到客户端tcp连接关闭
-                break;
-            }
+            //检测到客户端tcp连接关闭
+            if(rc<=0) break;    
         }
     }
    sleep(1);
    close(sockfd);
 }
 
+//GET处理
 void httpsever::get_method(string method,string url){
 	int len=url.length();
 	string tmp="./src";
@@ -143,19 +142,19 @@ void httpsever::get_method(string method,string url){
 	//cout<<tmp<<endl;
 	int fd=open(tmp.c_str(),O_RDONLY);//若所有欲核查的权限都通过了检查则返回0值，表示成功，只要有一个权限被禁止则返回-1。
 	if(fd>=0){
-	struct stat stat_buf;
-   	fstat(fd,&stat_buf);//通过文件名filename获取文件信息，并保存在buf所指的结构体stat中
-	char outstring[1024];
-	sprintf(outstring,"Http/1.1 200 OK\r\nContent-Length:%d\r\nContent-Type: text/html\r\n\r\n",stat_buf.st_size);//输出到命令行
-	write(sockfd,outstring,strlen(outstring));//sockfd是描述符,类似于open函数
-	sendfile(sockfd,fd,0,stat_buf.st_size);	 		
+	    struct stat stat_buf;
+   	    fstat(fd,&stat_buf);//通过文件名filename获取文件信息，并保存在buf所指的结构体stat中
+	    char outstring[1024];
+	    sprintf(outstring,"Http/1.1 200 OK\r\nContent-Length:%d\r\nContent-Type: text/html\r\n\r\n",stat_buf.st_size);//输出到命令行
+	    write(sockfd,outstring,strlen(outstring));//sockfd是描述符,类似于open函数
+	    sendfile(sockfd,fd,0,stat_buf.st_size);	 		
 	}
 	else{
-Bad_Request(method,url);
-		
+        Bad_Request(method,url);		
 	}
 }
 
+//POST处理
 void httpsever::post(string name,string id){
     string en="<html><title>POST Method</title><body bgcolor=ffffff>\n";
     string en1="Your name: "+name+"\nYour id: "+id+"\n"+"<hr><em>HTTP Web Server</em>\n</body></html>\n";
@@ -166,6 +165,3 @@ void httpsever::post(string name,string id){
     sprintf(outstring,"%s",finalentity.c_str());
     write(sockfd, outstring, strlen(outstring));
 }
-
-
-

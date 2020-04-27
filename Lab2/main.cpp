@@ -18,60 +18,73 @@
 #include <queue>
 #include <getopt.h>
 #include "httpsever.h"
-#define MAX_CLIENT_COUNT 20
 using namespace std;
-#define PTHREAD_NUM 20
+
+#define MAX_CLIENT_COUNT 20 //最大客户数量
+#define PTHREAD_NUM 20 //线程数
+
 void* start(void* arg);
+
+//唤醒消息队列等待线程
 pthread_mutex_t mutex;   
-pthread_cond_t cond;   //唤醒消息队列等待线程
+pthread_cond_t cond;
+
 queue<httpsever> queue1; //工作队列
 int pthread_num; //线程数
 pthread_t *pthread_pool;//线程池数组
 
+//主函数
 int main(int argc, char *argv[])
 {
+	//初始化
 	pthread_mutex_init(&mutex,NULL);
-    	cond = PTHREAD_COND_INITIALIZER;
+    cond = PTHREAD_COND_INITIALIZER;
 	static struct option long_options[] =
     {  
         {"ip", required_argument, NULL, '1'},
         {"port", required_argument, NULL, '1'},
         {"number-thread", required_argument, NULL,'1'},
         {NULL,  0,   NULL, 0},
-    }; 	
+    };
+
+    //判断是否缺少参数
 	if(argc < 5)
 	{
 		printf(" ip and port are empty\n");
 		return 1;
-	}//参数错误 
+	}
+
 	//获取输入的ip、端口和线程数
 	string ip = argv[2];
 	//cout<<ip<<endl;
-	int portNum = atoi(argv[4]);//获取端口
+	int portNum = atoi(argv[4]);
 	int port=portNum;
-
 	//限定端口号为1024~65535
-    	if((portNum<1024 || portNum>65535)){
+    if((portNum<1024 || portNum>65535)){
         printf("Error: portNum range is 1024~65535 \n");
         return 1;
     }
 	if(argc==7)
 		pthread_num = atoi(argv[6]);
-	else pthread_num = PTHREAD_NUM;
+	else 
+		pthread_num = PTHREAD_NUM;
 	
 	//创建线程池
 	pthread_pool = new pthread_t[pthread_num];
-if(!pthread_pool)
+	if(!pthread_pool)
 		throw std::exception();
 	for(int i=0;i<pthread_num;i++)
 	{
+		//创建线程
 		if(pthread_create(pthread_pool+i, NULL, start, NULL) != 0);
-		if(pthread_detach(pthread_pool[i]))//分离线程
+		//分离线程
+		if(pthread_detach(pthread_pool[i]))
 		{
 			delete [] pthread_pool;
 			throw std::exception();
 		}
 	}
+
 	//设置服务器的socket_in
 	int sock;
 	int connetionfd;//欢迎套接字和连接套接字
@@ -97,25 +110,23 @@ if(!pthread_pool)
 		return 1;
     }
 	
-
 	while(1)
 	{
 		struct sockaddr_in client;
 		socklen_t client_addrlen = sizeof(client);
-		connetionfd = accept(sock, (struct sockaddr*)&client, &client_addrlen);
-		
+		connetionfd = accept(sock, (struct sockaddr*)&client, &client_addrlen);		
 		assert(connetionfd>=0);
 		//加入工作队列
 		httpsever http(connetionfd);
 		pthread_mutex_lock(&mutex);
-    		queue1.push(http);//添加任务 
-    		pthread_cond_signal(&cond);//唤醒休眠线程
+    	queue1.push(http);//添加任务 
+    	pthread_cond_signal(&cond);//唤醒休眠线程
    		pthread_mutex_unlock(&mutex);
 	}
 	close(sock);
-
 	return 0;
 }
+
 void* start(void* arg)
 {
 	while(1){
@@ -134,7 +145,7 @@ void reuseAddr(int socketFd){
     int on = 1;
     int ret = setsockopt(socketFd,SOL_SOCKET,SO_REUSEADDR,&on,sizeof(on));
     if(ret==-1){
-        printf( "Error : fail to setsockopt\n");
+        printf("Error : fail to setsockopt\n");
         exit(1);
     }
 }
@@ -156,8 +167,8 @@ int startTcp(char *ipAddr, int portNum){
     reuseAddr(httpdSocket);
     if(bind(httpdSocket,(const struct sockaddr*)&tcpServerSockAddr,     //强制类型转换 sockaddr_in 转换为 sockaddr
         sizeof(tcpServerSockAddr))<0){
-        fprintf(stderr, "Error: can't bind port %d,errno is %d\n",portNum,errno);
-        return 1;
+        	fprintf(stderr, "Error: can't bind port %d,errno is %d\n",portNum,errno);
+        	return 1;
     }
     if(listen(httpdSocket,MAX_CLIENT_COUNT)<0){           //最大客户数量
         printf("Error: can't listen port %d,error is %d\n",portNum,errno);
@@ -165,4 +176,3 @@ int startTcp(char *ipAddr, int portNum){
     }
     return httpdSocket;
 }
-
