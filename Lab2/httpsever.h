@@ -28,8 +28,8 @@ public:
     httpsever(int id):sockfd(id){}
     ~httpsever(){}
     void solve();
-    void Bad_Request(string method,string url);
-    void get_method(string method,string url);
+    void Judge(string method,string url);
+    void get(string method,string url);
     void post(string name,string id);
 };
 
