@@ -223,9 +223,7 @@ HTTP服务器应该能够处理HTTP POST请求。在本实验中，处理HTTP PO
 
 --ip-指定服务器IP地址。
 --port-选择HTTP服务器侦听传入连接的端口。
---proxy-选择一个“上游” HTTP服务器进行代理。该参数可以在冒号后面有一个端口号：
-
-如https://www.CS06142.com:80，若未指定端口号，则默认为端口80。
+--proxy-选择一个“上游” HTTP服务器进行代理。该参数可以在冒号后面有一个端口号：如https://www.CS06142.com:80 若未指定端口号，则默认为端口80。
 
 #### 2.2.6 运行HTTP服务器
 
@@ -243,7 +241,7 @@ HTTP服务器应该能够处理HTTP POST请求。在本实验中，处理HTTP PO
 
 这意味着这是一个HTTP代理。该代理的IP地址为127.0.0.1，服务端口为8888。该代理具有8个线程的线程池。 
 
---proxy表示“上游” HTTP服务器为https://www.CS06142.COM:80。因此，如果您向该代理发送请求消息（即127.0.0.1:8888），它将将该请求消息转发至“上游” HTTP服务器（即https://www.CS06142.com:80）并转发给客户端的响应消息。
+--proxy表示“上游” HTTP服务器为https://www.CS06142.COM:80。 因此，如果您向该代理发送请求消息（即127.0.0.1:8888），它将将该请求消息转发至“上游” HTTP服务器（即https://www.CS06142.com:80） 并转发给客户端的响应消息。
 
 当您运行上面的命令时，您的HTTP服务器应该正确运行。
 
@@ -263,7 +261,6 @@ HTTP服务器应该能够处理HTTP POST请求。在本实验中，处理HTTP PO
 
 ![get_404_curl](C:/Users/秘密/Desktop/Lab2/get_404_curl.png)
 
-
 ##### 2.2.7.2 使用POST方法
 
 您可以通过使用curl程序发送HTTP请求来检查POST方法是否有效。在终端上键入命令：
@@ -273,7 +270,6 @@ HTTP服务器应该能够处理HTTP POST请求。在本实验中，处理HTTP PO
 如果请求URL不是/ Post_show或键不是“ Name”和“ ID”），则会收到404 Not Found错误消息。
 
 ![post_404_curl](C:/Users/秘密/Desktop/Lab2/post_404_curl.png)
-
 
 您还可以构造POST HTTP请求，并使用某些浏览器插件工具将请求发送到HTTP服务器。
 
