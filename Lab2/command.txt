@@ -1,0 +1,25 @@
+非代理模式
+./httpserver --ip 127.0.0.1 --port 8888 --number-thread 8
+
+代理模式
+./httpserver --ip 127.0.0.1 --port 8888 --number-thread 8 --proxy https://www.CS06142.com:80
+
+测试GET：
+1、浏览器查看 127.0.0.1:8888/index.html
+2、终端运行
+curl -i -X GET 127.0.0.1:8888/index.html 200
+curl -i -X GET http://127.0.0.1:8888/index.html
+3、若页面不存在，返回404
+
+测试POST：
+1、安装浏览器插件工具测试
+2、终端运行
+curl -i -X POST --data 'Name=HNU&ID=CS06142' 127.0.0.1:8888/non_existent_post_show 404
+curl -i -X POST --data 'Name=HNU&ID=CS06142' http://127.0.0.1:8888/Post_show 200
+curl -i -X POST --data 'Incompatible_key1=val1&Incompatible_key2=val2' 127.0.0.1:8888/Post_show 404
+curl -i -X POST --data 'Incompatible_key1=val1&Incompatible_key2=val2' http://127.0.0.1:8888/Post_show
+3、不是文件或者Name&ID（无法识别），返回404
+
+测试Others:
+curl -i -X DELETE http://127.0.0.1:8888/index.html 501
+非GET&POST命令，返回501
